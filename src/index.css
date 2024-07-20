@@ -34,3 +34,15 @@ body {
     grid-area: footer;
 }
 
+.task-box {
+    display: flex;
+    padding: 1em;
+    justify-content: space-between;
+    height: 5em;
+    border: 1px solid blue;
+}
+
+.task-mini-container {
+    display: flex;
+    gap:1em;
+}

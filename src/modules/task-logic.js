@@ -1,4 +1,6 @@
-import { updateDisplay } from "./DOM-manipulation";
+import { ta } from "date-fns/locale";
+import { updateDisplay } from "./display-logic.js";
+
 const taskList = [];
 
 function createTaskDialog() {
@@ -34,7 +36,14 @@ function createTaskDialog() {
 
 function handleAddTask(taskValue, dialog) {
     if (taskValue.trim() === "") return; // Prevent adding empty tasks
-    const task = createTask(taskValue);
+    const task = {};
+    const taskObject = createTask(taskValue);
+    const taskBoxElement = taskBox(taskObject);
+
+    task['ID'] = generateUniqueId();
+    task['object'] = taskObject;
+    task['element'] = taskBoxElement;
+
     taskList.push(task);
 
     console.log(taskList);
@@ -63,5 +72,36 @@ function createTask(task) {
         },
     };
 };
+
+function taskBox(task) {
+    const taskBox = document.createElement('div');
+    const container = document.createElement('div');
+    const completeBtn = document.createElement('button');
+    const deleteBtn = document.createElement('button');
+    
+    taskBox.classList.add('task-box');
+    container.classList.add('task-mini-container');
+    completeBtn.classList.add('complete-btn');
+    deleteBtn.classList.add('delete-btn');
+
+    completeBtn.textContent = 'Complete';
+    deleteBtn.textContent = 'Delete';  
+
+    taskBox.textContent = task.getTask();
+    
+    container.appendChild(completeBtn);
+    container.appendChild(deleteBtn);
+    taskBox.appendChild(container);
+
+    
+
+    return taskBox;
+}
+
+function generateUniqueId() {
+    const timestamp = Date.now(); // Get the current timestamp
+    const randomNum = Math.floor(Math.random() * 1000000); // Generate a random number
+    return `task-${timestamp}-${randomNum}`; // Combine them to form a unique ID
+}
 
 export { createTaskDialog, taskList }; // Export the function for use in other modules
