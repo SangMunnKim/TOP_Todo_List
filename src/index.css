@@ -1,3 +1,10 @@
-div {
-    color: red;
+@import '../node_modules/modern-normalize/modern-normalize.css';
+body {
+    height: 100vh;
 }
+div.container {
+    padding: 1em;
+    display: grid;
+    grid-template-rows: 2fr 5fr 1fr;
+}
+

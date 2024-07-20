@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { watch } = require('fs');
 
 module.exports = {
   entry: './src/index.js',
@@ -12,7 +13,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'To do list',
-      filename: 'main.[contenthash].html',
+      filename: 'main.html',
       template: './src/template.html',
     }),
   ],
@@ -24,4 +25,5 @@ module.exports = {
       },
     ],
   },
+  watch: true,
 };
