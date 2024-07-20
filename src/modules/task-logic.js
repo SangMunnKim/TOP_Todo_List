@@ -1,4 +1,5 @@
-const tasksList = [];
+import { updateDisplay } from "./DOM-manipulation";
+const taskList = [];
 
 function createTaskDialog() {
     const taskDialog = document.createElement('dialog');
@@ -20,20 +21,32 @@ function createTaskDialog() {
 
 
     addBtn.addEventListener('click', () => handleAddTask(taskInput.value, taskDialog));
+    taskInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleAddTask(taskInput.value, taskDialog);
+        }
+    });
     cancelBtn.addEventListener('click', () => handleCancelTask(taskDialog));
 
     return taskDialog;
 }
 
 function handleAddTask(taskValue, dialog) {
+    if (taskValue.trim() === "") return; // Prevent adding empty tasks
     const task = createTask(taskValue);
-    tasksList.push(task);
-    console.log(tasksList);
+    taskList.push(task);
+
+    console.log(taskList);
+
     dialog.close();
+    dialog.remove();
+    updateDisplay();
 }
 
 function handleCancelTask(dialog) {
     dialog.close();
+    dialog.remove();   
 }
 
 function createTask(task) {
@@ -51,4 +64,4 @@ function createTask(task) {
     };
 };
 
-export { createTaskDialog }; // Export the function for use in other modules
+export { createTaskDialog, taskList }; // Export the function for use in other modules

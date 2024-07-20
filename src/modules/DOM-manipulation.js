@@ -1,4 +1,4 @@
-import { createTaskDialog } from './task-logic.js';
+import { createTaskDialog, taskList } from './task-logic.js';
 
 const container = document.querySelector('.container');
 const header = document.querySelector('.header');
@@ -13,6 +13,14 @@ addTaskBtn.addEventListener('click', (e) => {
     taskDialog.showModal();
 });
 
+function updateDisplay() {
+    for (let i = 0; i < taskList.length; i++) {
+        const task = document.createElement('div');
+        task.classList.add('task');
+        const taskText = taskList[i].task;
+        task.textContent = taskText;
+        main.appendChild(task);
+    }
+}
 
-
-export { addTaskBtn }; // Export the button for use in other modules
+export { addTaskBtn, updateDisplay }; // Export the button for use in other modules
