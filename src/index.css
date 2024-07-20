@@ -2,9 +2,35 @@
 body {
     height: 100vh;
 }
-div.container {
-    padding: 1em;
+.container {
     display: grid;
-    grid-template-rows: 2fr 5fr 1fr;
+    grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto 1fr auto;
+
+    height: min(100vh, 100vw);
+
+}
+.container > * {
+    border: 2px solid red;
+    padding: 1.5em;
+}
+.header {
+    grid-area: header;
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.main {
+    grid-area: main;
+}
+
+.footer {
+    grid-area: footer;
 }
 
