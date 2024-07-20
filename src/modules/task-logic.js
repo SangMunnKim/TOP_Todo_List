@@ -1,4 +1,4 @@
-import { ta } from "date-fns/locale";
+import { format } from "date-fns";
 import { updateDisplay } from "./display-logic.js";
 
 const taskList = [];
@@ -61,39 +61,57 @@ function handleCancelTask(dialog) {
 function createTask(task) {
     return {
         task: task,
+        date: format(new Date(), 'dd.MM.yyyy HH:mm:ss'),
         isComplete: false,
 
         getTask : function() {
             return this.task;
         },
 
+        getDate: function() {
+            return this.date;
+        },
+
         getIsComplete: function() {
             return this.isComplete;
+        },
+
+        setIsComplete: function() { 
+            this.isComplete = true;
         },
     };
 };
 
 function taskBox(task) {
     const taskBox = document.createElement('div');
-    const container = document.createElement('div');
+    const descriptionContainer = document.createElement('div');
+    const btnContainer = document.createElement('div');
     const completeBtn = document.createElement('button');
     const deleteBtn = document.createElement('button');
+    const descriptionBox = document.createElement('div');
+    const dateBox = document.createElement('div');
     
     taskBox.classList.add('task-box');
-    container.classList.add('task-mini-container');
+    descriptionContainer.classList.add('descriptionContainer');
+    btnContainer.classList.add('btnContainer');
     completeBtn.classList.add('complete-btn');
     deleteBtn.classList.add('delete-btn');
+    descriptionBox.classList.add('descriptionBox');
+    dateBox.classList.add('dateBox');
 
     completeBtn.textContent = 'Complete';
     deleteBtn.textContent = 'Delete';  
 
-    taskBox.textContent = task.getTask();
+    descriptionBox.textContent = task.getTask();
+    dateBox.textContent = task.getDate();
+    descriptionContainer.appendChild(descriptionBox);
+    descriptionContainer.appendChild(dateBox);
     
-    container.appendChild(completeBtn);
-    container.appendChild(deleteBtn);
-    taskBox.appendChild(container);
+    btnContainer.appendChild(completeBtn);
+    btnContainer.appendChild(deleteBtn);
+    taskBox.appendChild(descriptionContainer);
+    taskBox.appendChild(btnContainer);
 
-    
 
     return taskBox;
 }
