@@ -3,15 +3,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
+  mode: 'development',
   output: {
     filename: 'main.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
   },
-  clean: true,
   plugins: [
     new HtmlWebpackPlugin({
       title: 'To do list',
-      template: './template.html',
+      filename: 'main.[contenthash].html',
+      template: './src/template.html',
     }),
   ],
   module: {
