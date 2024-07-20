@@ -38,11 +38,26 @@ body {
     display: flex;
     padding: 1em;
     justify-content: space-between;
-    height: 5em;
+
     border: 1px solid blue;
 }
 
 .btnContainer {
     display: flex;
     gap:1em;
+}
+
+.descriptionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    border: 1px solid green;
+}
+
+.complete-btn, .delete-btn {
+    min-height: 3vh;
+    max-height: min(10vh, 5em);
+    padding: 0.5em;
+    border: none;
+    cursor: pointer;
 }

@@ -1,7 +1,20 @@
-import { format, getISODay } from "date-fns";
+import { add, format, getISODay } from "date-fns";
 import { updateDisplay } from "./display-logic.js";
 
 const taskList = [];
+const currentProject = 'Default';
+
+function getCurrentProject() {
+    return currentProject;
+}
+
+function setCurrentProject(project) { 
+    currentProject = project;
+}
+
+function addTask(task) {
+    taskList.push(task);
+};
 
 function createTaskDialog() {
     const taskDialog = document.createElement('dialog');
@@ -43,7 +56,7 @@ function handleAddTask(taskValue, dialog) {
     task['object'] = taskObject;
     task['element'] = taskBoxElement;
 
-    taskList.push(task);
+    addTask(task);
 
     console.log(taskList);
 
@@ -63,6 +76,7 @@ function createTask(task) {
         ID: generateUniqueId(),
         date: format(new Date(), 'dd.MM.yyyy HH:mm:ss'),
         isComplete: false,
+        project: getCurrentProject(),
 
         getTask : function() {
             return this.task;
@@ -80,6 +94,10 @@ function createTask(task) {
             return this.isComplete;
         },
 
+        getProject : function() {
+            return this.project;
+        },
+
         setIsComplete: function() { 
             this.isComplete = true;
         },
@@ -94,6 +112,7 @@ function taskBox(task) {
     const deleteBtn = document.createElement('button');
     const descriptionBox = document.createElement('div');
     const dateBox = document.createElement('div');
+    const projectBox = document.createElement('div');
     
     taskBox.classList.add('task-box');
     descriptionContainer.classList.add('descriptionContainer');
@@ -102,19 +121,25 @@ function taskBox(task) {
     deleteBtn.classList.add('delete-btn');
     descriptionBox.classList.add('descriptionBox');
     dateBox.classList.add('dateBox');
+    projectBox.classList.add('projectBox');
 
     completeBtn.textContent = 'Complete';
     deleteBtn.textContent = 'Delete';  
 
     descriptionBox.textContent = task.getTask();
     dateBox.textContent = task.getDate();
+    projectBox.textContent = `Project: ${task.getProject()}`;
+
     descriptionContainer.appendChild(descriptionBox);
     descriptionContainer.appendChild(dateBox);
-    
+    descriptionContainer.appendChild(projectBox);
+
     btnContainer.appendChild(completeBtn);
     btnContainer.appendChild(deleteBtn);
+
     taskBox.appendChild(descriptionContainer);
     taskBox.appendChild(btnContainer);
+    taskBox.setAttribute('id', task.getID());
 
     completeBtn.addEventListener('click', () => handleCompleteTask(task.getID()));
     deleteBtn.addEventListener('click', () => handleDeleteTask(task.getID()));
