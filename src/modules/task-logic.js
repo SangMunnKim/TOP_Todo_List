@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, getISODay } from "date-fns";
 import { updateDisplay } from "./display-logic.js";
 
 const taskList = [];
@@ -40,7 +40,6 @@ function handleAddTask(taskValue, dialog) {
     const taskObject = createTask(taskValue);
     const taskBoxElement = taskBox(taskObject);
 
-    task['ID'] = generateUniqueId();
     task['object'] = taskObject;
     task['element'] = taskBoxElement;
 
@@ -61,11 +60,16 @@ function handleCancelTask(dialog) {
 function createTask(task) {
     return {
         task: task,
+        ID: generateUniqueId(),
         date: format(new Date(), 'dd.MM.yyyy HH:mm:ss'),
         isComplete: false,
 
         getTask : function() {
             return this.task;
+        },
+
+        getID: function() {
+            return this.ID;
         },
 
         getDate: function() {
@@ -112,8 +116,26 @@ function taskBox(task) {
     taskBox.appendChild(descriptionContainer);
     taskBox.appendChild(btnContainer);
 
+    completeBtn.addEventListener('click', () => handleCompleteTask(task.getID()));
+    deleteBtn.addEventListener('click', () => handleDeleteTask(task.getID()));
 
     return taskBox;
+}
+
+function handleCompleteTask(taskID) {
+    const taskIndex = taskList.findIndex(task => task.object.getID() === taskID);
+    if (taskIndex !== -1) {
+        taskList[taskIndex].object.setIsComplete();
+        updateDisplay();
+    }
+}
+
+function handleDeleteTask(taskID) {
+    const taskIndex = taskList.findIndex(task => task.object.getID() === taskID);
+    if (taskIndex !== -1) {
+        taskList.splice(taskIndex, 1);
+        updateDisplay();
+    }
 }
 
 function generateUniqueId() {
