@@ -1,7 +1,9 @@
 import { add, format, getISODay } from "date-fns";
 import { taskList } from './task-logic.js';
+import { he } from "date-fns/locale";
 
 const displayTasks = document.querySelector('.display-tasks');
+const heading = document.querySelector('.main h1');
 let currentProject = 'Default';
 let currentFilter = 'All';
 
@@ -24,6 +26,7 @@ function setCurrentFilter(filter) {
 
 function updateDisplay() {
     displayTasks.innerHTML = '';
+    heading.textContent = currentFilter;
     switch (currentFilter) {
         case 'All':
             displayAllTasks();
