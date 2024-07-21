@@ -96,7 +96,6 @@ button {
     padding: 1em;
     justify-content: space-between;
     background-color: rgba(227, 238, 211, 0.326);
-    border: 1px solid blue;
     border-radius: 1em;
     gap: 1em;
 }
@@ -122,7 +121,6 @@ button {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    border: 1px solid green;
 }
 
 .complete-btn, .delete-btn {

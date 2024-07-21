@@ -123,9 +123,11 @@ function taskBox(task) {
 
     descriptionContainer.appendChild(descriptionBox);
     descriptionContainer.appendChild(dateBox);
-    descriptionContainer.appendChild(projectBox);
+    // descriptionContainer.appendChild(projectBox);
 
-    btnContainer.appendChild(completeBtn);
+    if (!task.getIsComplete()) {
+        btnContainer.appendChild(completeBtn);
+    }
     btnContainer.appendChild(deleteBtn);
 
     taskBox.appendChild(descriptionContainer);
@@ -142,6 +144,11 @@ function handleCompleteTask(taskID) {
     const taskIndex = taskList.findIndex(task => task.object.getID() === taskID);
     if (taskIndex !== -1) {
         taskList[taskIndex].object.setIsComplete();
+        const taskElement = taskList[taskIndex].element;
+        const completeButton = taskElement.querySelector('.complete-btn');
+        if (completeButton) {
+            completeButton.remove();
+        }
         updateDisplay();
     }
 }

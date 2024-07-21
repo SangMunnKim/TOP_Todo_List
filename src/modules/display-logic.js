@@ -46,48 +46,58 @@ function updateDisplay() {
 }
 
 function displayAllTasks() {
-    for (let i = taskList.length - 1; i >= 0; i--) {
-        const taskBox = taskList[i].element;
-        if (!taskList[i].object.getIsComplete()) {
-            displayTasks.appendChild(taskBox);
-        };
-    }
-};
+    const sortedTasks = taskList.filter(task => !task.object.getIsComplete())
+        .sort((a, b) => parseTaskDate(a.object.getDate()) - parseTaskDate(b.object.getDate()));
+
+    sortedTasks.forEach(task => {
+        const taskBox = task.element;
+        displayTasks.appendChild(taskBox);
+    });
+}
 
 function displayTodayTasks() {
     const today = format(new Date(), 'dd.MM.yyyy');
-    for (let i = taskList.length - 1; i >= 0; i--) {
-        const taskBox = taskList[i].element;
-        const taskDate = taskList[i].object.getDate().split(' ')[0];
-        if (taskDate ===  today && !taskList[i].object.getIsComplete()) {
-            displayTasks.appendChild(taskBox);
-        };
-    }
+    const sortedTasks = taskList.filter(task => {
+        const taskDate = task.object.getDate().split(' ')[0];
+        return taskDate === today && !task.object.getIsComplete();
+    }).sort((a, b) => parseTaskDate(a.object.getDate()) - parseTaskDate(b.object.getDate()));
+
+    sortedTasks.forEach(task => {
+        const taskBox = task.element;
+        displayTasks.appendChild(taskBox);
+    });
 }
 
 function displayWeekTasks() {
     const week = format(new Date(), 'w');
-    for (let i = taskList.length - 1; i >= 0; i--) {
-        const taskBox = taskList[i].element;
-        const taskDate = taskList[i].object.getDate().split(' ')[0]; // Get the date part
-        const [day, month, year] = taskDate.split('.'); // Split the date into components
-        const parsedDate = new Date(`${year}-${month}-${day}`); // Reformat to yyyy-MM-dd
+    const sortedTasks = taskList.filter(task => {
+        const taskDate = task.object.getDate().split(' ')[0];
+        const [day, month, year] = taskDate.split('.');
+        const parsedDate = new Date(`${year}-${month}-${day}`);
+        const taskWeek = format(parsedDate, 'w');
+        return taskWeek === week && !task.object.getIsComplete();
+    }).sort((a, b) => parseTaskDate(a.object.getDate()) - parseTaskDate(b.object.getDate()));
 
-        const taskWeek = format(parsedDate, 'w'); // Get the week number of the task
-        if (taskWeek === week && !taskList[i].object.getIsComplete()) {
-            displayTasks.appendChild(taskBox);
-        }
-    }
+    sortedTasks.forEach(task => {
+        const taskBox = task.element;
+        displayTasks.appendChild(taskBox);
+    });
 }
 
 function displayCompletedTasks() {
-    for (let i = taskList.length - 1; i >= 0; i--) {
-        const taskBox = taskList[i].element;
-        if (taskList[i].object.getIsComplete()) {
-            displayTasks.appendChild(taskBox);
-        };
-    }
+    const sortedTasks = taskList.filter(task => task.object.getIsComplete())
+        .sort((a, b) => parseTaskDate(a.object.getDate()) - parseTaskDate(b.object.getDate()));
+
+    sortedTasks.forEach(task => {
+        const taskBox = task.element;
+        displayTasks.appendChild(taskBox);
+    });
 }
 
+function parseTaskDate(taskDate) {
+    const [datePart, timePart] = taskDate.split(' ');
+    const [day, month, year] = datePart.split('.');
+    return new Date(`${year}-${month}-${day}T${timePart}`);
+}
 
 export { updateDisplay, getCurrentProject, setCurrentProject, getCurrentFilter, setCurrentFilter };
