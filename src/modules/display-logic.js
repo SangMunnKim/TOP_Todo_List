@@ -46,7 +46,7 @@ function updateDisplay() {
 }
 
 function displayAllTasks() {
-    for (let i = 0; i < taskList.length; i++) {
+    for (let i = taskList.length - 1; i >= 0; i--) {
         const taskBox = taskList[i].element;
         if (!taskList[i].object.getIsComplete()) {
             displayTasks.appendChild(taskBox);
@@ -56,7 +56,7 @@ function displayAllTasks() {
 
 function displayTodayTasks() {
     const today = format(new Date(), 'dd.MM.yyyy');
-    for (let i = 0; i < taskList.length; i++) {
+    for (let i = taskList.length - 1; i >= 0; i--) {
         const taskBox = taskList[i].element;
         const taskDate = taskList[i].object.getDate().split(' ')[0];
         if (taskDate ===  today && !taskList[i].object.getIsComplete()) {
@@ -67,7 +67,7 @@ function displayTodayTasks() {
 
 function displayWeekTasks() {
     const week = format(new Date(), 'w');
-    for (let i = 0; i < taskList.length; i++) {
+    for (let i = taskList.length - 1; i >= 0; i--) {
         const taskBox = taskList[i].element;
         const taskDate = taskList[i].object.getDate().split(' ')[0]; // Get the date part
         const [day, month, year] = taskDate.split('.'); // Split the date into components
@@ -81,7 +81,7 @@ function displayWeekTasks() {
 }
 
 function displayCompletedTasks() {
-    for (let i = 0; i < taskList.length; i++) {
+    for (let i = taskList.length - 1; i >= 0; i--) {
         const taskBox = taskList[i].element;
         if (taskList[i].object.getIsComplete()) {
             displayTasks.appendChild(taskBox);
