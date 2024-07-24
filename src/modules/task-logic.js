@@ -1,11 +1,45 @@
 import { addDays, format, startOfWeek, endOfWeek } from "date-fns";
 import { updateDisplay, getCurrentProject } from "./display-logic.js";
 
-const taskList = [];
+// Function to store taskList in localStorage
+function localStore(taskList) {
+    const taskListData = taskList.map(task => ({
+        ...task,
+        object: {
+            ...task.object,
+            // Remove methods before storing
+            getTask: undefined,
+            getID: undefined,
+            getDate: undefined,
+            getIsComplete: undefined,
+            getProject: undefined,
+            setIsComplete: undefined,
+        }
+    }));
+    localStorage.setItem('taskList', JSON.stringify(taskListData));
+}
+
+// Load and reconstruct methods
+const taskListData = localStorage.getItem('taskList') ? JSON.parse(localStorage.getItem('taskList')) : [];
+const taskList = taskListData.map(taskData => {
+    const taskObject = {
+        ...taskData.object,
+        getTask: function() { return this.task; },
+        getID: function() { return this.ID; },
+        getDate: function() { return this.date; },
+        getIsComplete: function() { return this.isComplete; },
+        getProject: function() { return this.project; },
+        setIsComplete: function() { this.isComplete = true; }
+    };
+    const taskElement = taskBox(taskObject); // Recreate the DOM element
+    return { object: taskObject, element: taskElement };
+});
+
+console.log(taskList);
 
 function addTask(task) {
     taskList.push(task);
-};
+}
 
 function createTaskDialog() {
     const taskDialog = document.createElement('dialog');
@@ -24,7 +58,6 @@ function createTaskDialog() {
     taskDialog.appendChild(taskInput);
     taskDialog.appendChild(addBtn);
     taskDialog.appendChild(cancelBtn);
-
 
     addBtn.addEventListener('click', () => handleAddTask(taskInput.value, taskDialog));
     taskInput.addEventListener('keydown', (event) => {
@@ -48,6 +81,7 @@ function handleAddTask(taskValue, dialog) {
     task['element'] = taskBoxElement;
 
     addTask(task);
+    localStore(taskList);
 
     console.log(taskList);
 
@@ -69,7 +103,7 @@ function createTask(task) {
         isComplete: false,
         project: getCurrentProject(),
 
-        getTask : function() {
+        getTask: function() {
             return this.task;
         },
 
@@ -85,15 +119,15 @@ function createTask(task) {
             return this.isComplete;
         },
 
-        getProject : function() {
+        getProject: function() {
             return this.project;
         },
 
         setIsComplete: function() { 
             this.isComplete = true;
-        },
+        }
     };
-};
+}
 
 function taskBox(task) {
     const taskBox = document.createElement('div');
@@ -199,10 +233,9 @@ function createExampleTask(taskName, daysToAdd, isComplete = false) {
 
         setIsComplete: function () {
             this.isComplete = true;
-        },
+        }
     };
 }
-
 // Function to create and add tasks to the taskList
 function addTaskToList(taskName, daysToAdd, isComplete = false) {
     const taskObject = createExampleTask(taskName, daysToAdd, isComplete);
@@ -215,18 +248,17 @@ function addTaskToList(taskName, daysToAdd, isComplete = false) {
 }
 
 // Create example tasks
-addTaskToList('Task for today', 0); // Today's date
-addTaskToList('Task for tomorrow', 1); // Tomorrow's date
-addTaskToList('Task for day after tomorrow', 2); // Day after tomorrow's date
-addTaskToList('Task for three days from now', 3); // Three days from now
-addTaskToList('Task completed today', 0, true); // Today's date, completed
-addTaskToList('Task completed this week', 1, true); // Tomorrow's date, completed
-addTaskToList('Task completed last week', -7, true); // Last week's date, completed
-addTaskToList('Task for next week', 7); // Next week's date
-addTaskToList('Task for last week', -7); // Last week's date
+// addTaskToList('Task for today', 0); // Today's date
+// addTaskToList('Task for tomorrow', 1); // Tomorrow's date
+// addTaskToList('Task for day after tomorrow', 2); // Day after tomorrow's date
+// addTaskToList('Task for three days from now', 3); // Three days from now
+// addTaskToList('Task completed today', 0, true); // Today's date, completed
+// addTaskToList('Task completed this week', 1, true); // Tomorrow's date, completed
+// addTaskToList('Task completed last week', -7, true); // Last week's date, completed
+// addTaskToList('Task for next week', 7); // Next week's date
+// addTaskToList('Task for last week', -7); // Last week's date
 
 // Log the taskList to verify
 console.log(taskList);
-
 
 export { createTaskDialog, taskList }; // Export the function for use in other modules
